@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using lr1.DataStructures;
 
 namespace lr1
 {
@@ -13,6 +14,15 @@ namespace lr1
                 transformedShapes.Add(shape);
             }
             return transformedShapes;
+        }
+
+        public static IDataList<T> TransformAll<T>(IDataList<T> shapes, ITransformation transformation) where T : IShape
+        {
+            for (int i = 0; i < shapes.Count; i++)
+            {
+                shapes.GetAt(i).ApplyTransformation(transformation);
+            }
+            return shapes;
         }
 
         public static Point ApplyMultipleTransformations(Point p, params ITransformation[] transformations)

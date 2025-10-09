@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using lr1.DataStructures;
 
 namespace lr1
 {
@@ -18,15 +19,14 @@ namespace lr1
             Height = height;
         }
 
-        private static IEnumerable<Point> GetRectangleVertices(Point topLeft, double width, double height)
+        private static MyDynamicArrayBasedList<Point> GetRectangleVertices(Point topLeft, double width, double height)
         {
-            return new List<Point>
-            {
-                topLeft,
-                new Point(topLeft.X + width, topLeft.Y),
-                new Point(topLeft.X + width, topLeft.Y + height),
-                new Point(topLeft.X, topLeft.Y + height)
-            };
+            MyDynamicArrayBasedList<Point> vertices = new MyDynamicArrayBasedList<Point>();
+            vertices.Add(topLeft);
+            vertices.Add(new Point(topLeft.X + width, topLeft.Y));
+            vertices.Add(new Point(topLeft.X + width, topLeft.Y + height));
+            vertices.Add(new Point(topLeft.X, topLeft.Y + height));
+            return vertices;
         }
 
         public override double GetArea() => Width * Height;
