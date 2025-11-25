@@ -1,10 +1,8 @@
 name: Deploy Doxygen to GitHub Pages
 
 on:
-  # Запуск при оновленні коду
   push:
     branches: ["main", "master"]
-  # Кнопка для ручного запуску (про всяк випадок)
   workflow_dispatch:
 
 permissions:
@@ -31,14 +29,14 @@ jobs:
 
       - name: Generate Documentation
         run: |
-          # 1. Створюємо стандартний файл налаштувань
+          # 1. Створюємо налаштування в корені
           doxygen -g
 
-          # 2. Налаштовуємо його під вашу структуру
+          # 2. Налаштовуємо
           echo 'PROJECT_NAME = "Link Collector"' >> Doxyfile
           
-          # ВАЖЛИВО: Вказуємо, що код лежить у папці LinkCollector
-          echo 'INPUT = LinkCollector' >> Doxyfile
+          # ВАЖЛИВО: Кажемо Doxygen шукати код у папці lab2
+          echo 'INPUT = lab2' >> Doxyfile
           
           echo 'OUTPUT_DIRECTORY = docs' >> Doxyfile
           echo 'HTML_OUTPUT = .' >> Doxyfile
@@ -49,7 +47,7 @@ jobs:
           # 3. Запускаємо генерацію
           doxygen Doxyfile
 
-      # Створюємо файл .nojekyll
+      # Створюємо .nojekyll
       - name: Disable Jekyll
         run: touch docs/.nojekyll
 
