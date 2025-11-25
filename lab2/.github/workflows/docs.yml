@@ -28,23 +28,31 @@ jobs:
 
       - name: Generate Documentation
         run: |
-          cd lab2
+          # 1. Створюємо файл налаштувань Doxyfile з нуля
           doxygen -g
+
+          # 2. Налаштовуємо його під вашу структуру папок
           echo 'PROJECT_NAME = "Link Collector"' >> Doxyfile
+          
+          # ВАЖЛИВО: Вказуємо, що код лежить у папці LinkCollector
+          echo 'INPUT = LinkCollector' >> Doxyfile
+          
           echo 'OUTPUT_DIRECTORY = docs' >> Doxyfile
           echo 'HTML_OUTPUT = .' >> Doxyfile
           echo 'RECURSIVE = YES' >> Doxyfile
           echo 'GENERATE_LATEX = NO' >> Doxyfile
           echo 'INPUT_ENCODING = UTF-8' >> Doxyfile
+
+          # 3. Запускаємо генерацію
           doxygen Doxyfile
 
       - name: Disable Jekyll
-        run: touch lab2/docs/.nojekyll
+        run: touch docs/.nojekyll
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'lab2/docs'
+          path: 'docs'
 
       - name: Deploy to GitHub Pages
         id: deployment
