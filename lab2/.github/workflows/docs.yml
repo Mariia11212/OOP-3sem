@@ -1,0 +1,51 @@
+﻿name: Deploy Doxygen to GitHub Pages
+
+on:
+  push:
+    branches: ["main"]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Doxygen
+        run: sudo apt-get install -y doxygen
+
+      - name: Generate Documentation
+        run: |
+          cd lab2
+          doxygen -g
+          echo 'PROJECT_NAME = "Link Collector"' >> Doxyfile
+          echo 'OUTPUT_DIRECTORY = docs' >> Doxyfile
+          echo 'HTML_OUTPUT = .' >> Doxyfile
+          echo 'RECURSIVE = YES' >> Doxyfile
+          echo 'GENERATE_LATEX = NO' >> Doxyfile
+          echo 'INPUT_ENCODING = UTF-8' >> Doxyfile
+          doxygen Doxyfile
+
+      - name: Disable Jekyll
+        run: touch lab2/docs/.nojekyll
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'lab2/docs'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
