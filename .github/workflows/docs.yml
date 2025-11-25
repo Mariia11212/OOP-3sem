@@ -1,0 +1,64 @@
+name: Deploy Doxygen to GitHub Pages
+
+on:
+  # Запуск при оновленні коду
+  push:
+    branches: ["main", "master"]
+  # Кнопка для ручного запуску (про всяк випадок)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Doxygen
+        run: sudo apt-get install -y doxygen
+
+      - name: Generate Documentation
+        run: |
+          # 1. Створюємо стандартний файл налаштувань
+          doxygen -g
+
+          # 2. Налаштовуємо його під вашу структуру
+          echo 'PROJECT_NAME = "Link Collector"' >> Doxyfile
+          
+          # ВАЖЛИВО: Вказуємо, що код лежить у папці LinkCollector
+          echo 'INPUT = LinkCollector' >> Doxyfile
+          
+          echo 'OUTPUT_DIRECTORY = docs' >> Doxyfile
+          echo 'HTML_OUTPUT = .' >> Doxyfile
+          echo 'RECURSIVE = YES' >> Doxyfile
+          echo 'GENERATE_LATEX = NO' >> Doxyfile
+          echo 'INPUT_ENCODING = UTF-8' >> Doxyfile
+
+          # 3. Запускаємо генерацію
+          doxygen Doxyfile
+
+      # Створюємо файл .nojekyll
+      - name: Disable Jekyll
+        run: touch docs/.nojekyll
+
+      # Завантажуємо результат
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'docs'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
