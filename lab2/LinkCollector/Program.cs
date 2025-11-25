@@ -1,17 +1,28 @@
+﻿using System;
+using System.Windows.Forms;
+using LinkCollector.Forms;
+
 namespace LinkCollector
 {
-    internal static class Program
+    /// <summary>
+    /// Головний клас програми, що містить точку входу.
+    /// </summary>
+    static class Program
     {
         /// <summary>
-        ///  The main entry point for the application.
+        /// Головна точка входу для програми.
         /// </summary>
-        [STAThread]
+        [STAThread] // Вказує, що модель потоків COM для програми є однопотоковою (необхідно для Windows Forms)
         static void Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
-            ApplicationConfiguration.Initialize();
-            Application.Run(new Form1());
+            // Вмикає візуальні стилі для елементів керування (щоб кнопки виглядали сучасно)
+            Application.EnableVisualStyles();
+
+            // Встановлює сумісність рендерингу тексту (використання GDI+ для кращого вигляду тексту)
+            Application.SetCompatibleTextRenderingDefault(false);
+
+            // Створює екземпляр головної форми та запускає цикл повідомлень програми
+            Application.Run(new MainForm());
         }
     }
 }
