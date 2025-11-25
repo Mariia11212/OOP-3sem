@@ -1,0 +1,11 @@
+﻿PROJECT_NAME = "Link Collector"
+# Вказуємо папку, де лежить код
+INPUT = LinkCollector
+# Вказуємо, куди складати документацію
+OUTPUT_DIRECTORY = docs
+HTML_OUTPUT = .
+# Шукати файли у підпапках
+RECURSIVE = YES
+# Вимкнути генерацію зайвих форматів
+GENERATE_LATEX = NO
+INPUT_ENCODING = UTF-8
